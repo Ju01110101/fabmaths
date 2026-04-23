@@ -1,0 +1,98 @@
+$screen: "only screen";
+// body {
+//   border: 20px solid blue !important;
+// }
+// Breakpoints
+$media_350: "#{$screen} and (max-width: 350px)";
+$media_415: "#{$screen} and (max-width: 415px)";
+$media_500: "#{$screen} and (max-width: 500px)";
+$media_575: "#{$screen} and (max-width: 575px)";
+$media_600: "#{$screen} and (max-width: 600px)";
+$media_750: "#{$screen} and (max-width: 750px)";
+$media_768: "#{$screen} and (max-width: 768px)";
+$media_800: "#{$screen} and (max-width: 800px)";
+$media_960: "#{$screen} and (max-width: 960px)";
+$media_1000: "#{$screen} and (max-width: 1000px)";
+$media_1024: "#{$screen} and (max-width: 1023px)";
+$media_1100: "#{$screen} and (max-width: 1100px)";
+$media_1200: "#{$screen} and (max-width: 1200px)";
+$media_1225: "#{$screen} and (max-width: 1225px)";
+$media_1300: "#{$screen} and (max-width: 1300px)";
+$media_1400: "#{$screen} and (max-width: 1400px)";
+$media_1500: "#{$screen} and (max-width: 1500px)";
+$media_1460: "#{$screen} and (max-width: 1460px)";
+$media_2000: "#{$screen} and (max-width: 2000px)";
+$media_600_up: "#{$screen} and (min-width: 601px)";
+
+@mixin media_350 {
+  @media #{$media_350} {@content}
+}
+@mixin media_415 {
+  @media #{$media_415} {@content}
+}
+@mixin media_500 {
+  @media #{$media_500} {@content}
+}
+@mixin media_575 {
+  @media #{$media_575} {@content}
+}
+@mixin media_600 {
+  @media #{$media_600} {@content}
+}
+@mixin media_750 {
+  @media #{$media_750} {@content}
+}
+@mixin media_768 {
+  @media #{$media_768} {@content}
+}
+@mixin media_800 {
+  @media #{$media_800} {@content}
+}
+@mixin media_960 {
+  @media #{$media_960} {@content}
+}
+@mixin media_1000 {
+  @media #{$media_1000} {@content}
+}
+@mixin media_1024 {
+  @media #{$media_1024} {@content}
+}
+@mixin media_1100 {
+  @media #{$media_1100} {@content}
+}
+@mixin media_1200 {
+  @media #{$media_1200} {@content}
+}
+@mixin media_1225 {
+  @media #{$media_1225} {@content}
+}
+@mixin media_1300 {
+  @media #{$media_1300} {@content}
+}
+@mixin media_1400 {
+  @media #{$media_1400} {@content}
+}
+@mixin media_1500 {
+  @media #{$media_1500} {@content}
+}
+@mixin media_600_up {
+  @media #{$media_600_up} {@content}
+}
+
+// from life-diag project:
+// $sm: "screen and (max-width: 540px)";
+// @mixin sm { @media #{$sm} {@content} }
+
+// $md: "screen and (max-width: 720px)";
+// @mixin md { @media #{$md} {@content} }
+
+// $lg: "screen and (max-width: 960px)";
+// @mixin lg { @media #{$lg} {@content} }
+
+// $xl: "screen and (max-width: 1140px)";
+// @mixin xl { @media #{$xl} {@content} }
+
+// $xxl: "screen and (max-width: 1280px)";
+// @mixin xxl { @media #{$xxl} {@content} }
+
+// @include lg {}
