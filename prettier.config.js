@@ -1,0 +1,7 @@
+export default {
+  $schema: "https://json.schemastore.org/prettierrc",
+  trailingComma: "es5",
+  semi: false,
+  singleQuote: true,
+  printWidth: 100,
+};
