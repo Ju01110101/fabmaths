@@ -6,6 +6,7 @@ const {
   nextReview,
   prevReview,
   goToReview,
+  handlers,
 } = useReviews()
 const isReady = ref(false)
 const cardRefs = ref<(HTMLElement | null)[]>([])
@@ -75,13 +76,13 @@ onMounted(() => {
         class="carousel-viewport"
         :class="{ ready: isReady }"
         :style="viewportStyle"
-        @touchstart="startTouch"
-        @touchmove="moveTouch"
-        @touchend="endTouch"
-        @mousedown="startMouse"
-        @mousemove="moveMouse"
-        @mouseup="endMouse"
-        @mouseleave="endMouse"
+        @touchstart="handlers.startTouch"
+        @touchmove="handlers.moveTouch"
+        @touchend="handlers.endTouch"
+        @mousedown="handlers.startMouse"
+        @mousemove="handlers.moveMouse"
+        @mouseup="handlers.endMouse"
+        @mouseleave="handlers.endMouse"
       >
         <div
           class="carousel-track"
