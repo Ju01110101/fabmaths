@@ -2,14 +2,8 @@
 
 /**
  * Contact Form Handler
- * Handles traditional POST submissions from static Nuxt landing pages.
  */
-
-// Restrict access to POST requests only
-if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-  http_response_code(405);
-  exit('Method Not Allowed');
-}
+session_start();
 
 // ─── Anti-bot: Referer check ────────────────────────────────────────────────
 // Only accept submissions that come from our own domain.
@@ -25,29 +19,36 @@ if (!in_array($refererHost, $allowedHosts, true)) {
 // ─── Anti-bot: Honeypot field (should always be empty) ──────────────────────
 $honeypot = $_POST['full_name_confirm'] ?? '';
 
-// ─── Anti-bot: Static token check ───────────────────────────────────────────
-// The Nuxt form always sends anti_bot=nuxt_verified via a hidden field.
-// A generic bot hitting the endpoint directly will likely miss this.
-$antiBot = $_POST['anti_bot'] ?? '';
-
-// ─── Anti-bot: Submission timer ─────────────────────────────────────────────
-// p_t is a Unix timestamp (seconds) set client-side at page load.
-// Submissions faster than 3 s or older than 1 hour are rejected.
-$currentTime   = time();
-$pageLoadTime  = (int)($_POST['p_t'] ?? 0);
-$secondsPassed = $currentTime - $pageLoadTime;
-
-if (
-  !empty($honeypot)           ||   // honeypot filled
-  $antiBot !== 'nuxt_verified' ||   // missing / wrong static token
-  $pageLoadTime <= 0           ||   // no timestamp sent
-  $secondsPassed < 3           ||   // submitted too fast
-  $secondsPassed > 3600             // timestamp older than 1 hour
-) {
-  // Silently redirect to thank-you to fool the bot
+if (!empty($honeypot)) {
   header('Location: /thank-you');
   exit;
 }
+
+if ($_SERVER['REQUEST_METHOD'] === 'GET') {
+  $token = bin2hex(random_bytes(32));
+  $_SESSION['csrf'] = $token;
+
+  header('Content-Type: text/plain');
+  echo $token;
+  exit;
+}
+
+// Restrict access to POST requests only
+if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+  http_response_code(405);
+  exit('Method Not Allowed');
+}
+
+$csrfSession = $_SESSION['csrf'] ?? '';
+$csrfPost    = $_POST['csrf'] ?? '';
+
+if (!$csrfSession || !$csrfPost || !hash_equals($csrfSession, $csrfPost)) {
+  header('Location: /thank-you');
+  exit;
+}
+
+unset($_SESSION['csrf']);
+
 
 // ─── Collect & sanitize input ────────────────────────────────────────────────
 // strip_tags removes any HTML/JS injection attempts; substr caps field length.

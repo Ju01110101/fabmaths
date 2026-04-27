@@ -16,17 +16,27 @@ const form = ref({
   // phone: queryToString(route.query, 'phone'),
   // contact: queryToString(route.query, 'contact'),
   message: queryToString(route.query, 'message'),
-  anti_bot: '',
 })
 
-const error = ref('')
-if (route.query.error) {
-  error.value = 'Something went wrong. Please check your data and try again.'
+const updateFormAndError = () => {
+  form.value = {
+    // role: queryToString(route.query, 'role'),
+    name: queryToString(route.query, 'name'),
+    email: queryToString(route.query, 'email'),
+    // phone: queryToString(route.query, 'phone'),
+    // contact: queryToString(route.query, 'contact'),
+    message: queryToString(route.query, 'message'),
+  }
+
+  if (route.query.error) {
+    error.value = 'Something went wrong. Please check your data and try again.'
+  }
 }
 
-const validate = () => {
-  if (!formRef.value) return
+const csrf = ref<string | null>(null)
+const error = ref<string | null>('')
 
+const validate = () => {
   // if (!form.role ||!form.value.name || !form.value.email || !form.value.contact) {
   //   error.value = 'Please fill in all required fields.'
   //   return false
@@ -55,6 +65,69 @@ const handleSubmit = () => {
   loading.value = true
   formRef.value.submit()
 }
+
+async function fetchCsrf(retries = 2) {
+  try {
+    error.value = ''
+
+    const res = await fetch('/contact.php', {
+      credentials: 'include',
+    })
+
+    if (!res.ok) throw new Error('Server error')
+
+    const token = await res.text()
+
+    if (token.length === 64) {
+      csrf.value = token
+    } else {
+      throw new Error('Invalid CSRF token')
+    }
+
+    csrf.value = token
+  } catch (err) {
+    console.error(err)
+
+    if (retries > 0) {
+      setTimeout(() => fetchCsrf(retries - 1), 1000)
+    } else {
+      error.value = 'Failed to load the form. Please refresh the page or try again later.'
+    }
+  }
+}
+
+watch(
+  () => route.query,
+  () => {
+    updateFormAndError()
+  },
+  { immediate: true },
+)
+
+onMounted(() => {
+  // Fetch initial CSRF token for the session
+  fetchCsrf()
+
+  /**
+   * Handle the Back-Forward Cache (BFCache).
+   * If the user returns via the back button, we force a refresh
+   * to ensure security tokens are valid and the form is cleared.
+   */
+  window.addEventListener('pageshow', (event) => {
+    if (event.persisted) {
+      // Use replace to clean the URL and reload the page state
+      // This prevents the 'error' params from staying in the browser history
+      window.location.replace(window.location.origin + window.location.pathname)
+    }
+  })
+
+  // Manual URL cleanup for the initial direct load if parameters exist
+  const url = new URL(window.location.href)
+  if (url.search) {
+    // Clean URL without adding a new entry to the history stack
+    window.history.replaceState({}, '', window.location.pathname)
+  }
+})
 </script>
 
 <template>
@@ -65,13 +138,10 @@ const handleSubmit = () => {
       </div>
 
       <h1>
-        GCSE Maths exams are weeks away. If your child is struggling, now is the
-        time to fix it.
+        GCSE Maths exams are weeks away. If your child is struggling, now is the time to fix it.
       </h1>
 
-      <p class="intro">
-        1-to-1 support focused on identifying and fixing gaps quickly.
-      </p>
+      <p class="intro">1-to-1 support focused on identifying and fixing gaps quickly.</p>
 
       <div class="about-picture">
         <img class="wide" src="@/assets/img/landing-about-picture.jpg" />
@@ -79,10 +149,9 @@ const handleSubmit = () => {
 
       <div class="bio">
         <p>
-          I'm Fabrice, a GCSE Maths specialist in Birmingham. I work with Year
-          10 and 11 students who've fallen behind — finding the exact gaps
-          (usually from Year 8-9) and fixing them before exam season. Sessions
-          are 1-to-1 via Zoom, tailored to your child's pace.
+          I'm Fabrice, a GCSE Maths specialist in Birmingham. I work with Year 10 and 11 students
+          who've fallen behind — finding the exact gaps (usually from Year 8-9) and fixing them
+          before exam season. Sessions are 1-to-1 via Zoom, tailored to your child's pace.
         </p>
       </div>
 
@@ -91,9 +160,7 @@ const handleSubmit = () => {
       <ReviewCarousel />
 
       <div class="cta-section">
-        <button @click="scrollTo('contact-form')">
-          Book Your First Session
-        </button>
+        <button @click="scrollTo('contact-form')">Book Your First Session</button>
       </div>
 
       <form
@@ -104,13 +171,10 @@ const handleSubmit = () => {
         class="form contact-form"
         @submit.prevent="handleSubmit"
       >
+        <input type="hidden" name="csrf" v-model="csrf" />
         <div style="display: none" aria-hidden="true">
           <input type="text" name="full_name_confirm" tabindex="-1" value="" />
         </div>
-        <ClientOnly>
-          <input type="hidden" name="p_t" :value="Date.now()" />
-        </ClientOnly>
-        <input type="hidden" name="anti_bot" value="nuxt_verified" />
 
         <div class="intro-form">
           <h2>What happens next</h2>
@@ -121,8 +185,8 @@ const handleSubmit = () => {
             <li>I'll message you within a few hours.</li>
             <li>We'll briefly discuss your child's needs.</li>
             <li>
-              If I can help, I'll send my availability and we'll book a first
-              session. First session includes a quick diagnostic.
+              If I can help, I'll send my availability and we'll book a first session. First session
+              includes a quick diagnostic.
             </li>
             <li>If I can't help, I'll point you in the right direction.</li>
           </ul>
@@ -149,9 +213,7 @@ const handleSubmit = () => {
         </div> -->
 
         <div class="form-group">
-          <label for="name">
-            Parent or Guardian Name <span class="mandatory">*</span>
-          </label>
+          <label for="name"> Parent or Guardian Name <span class="mandatory">*</span> </label>
           <input
             v-model="form.name"
             id="name"
@@ -185,9 +247,7 @@ const handleSubmit = () => {
         -->
 
         <div class="form-group form-group-email">
-          <label for="email">
-            Email Address <span class="mandatory">*</span>
-          </label>
+          <label for="email"> Email Address <span class="mandatory">*</span> </label>
           <input
             v-model="form.email"
             id="email"
@@ -216,7 +276,7 @@ const handleSubmit = () => {
           <p v-if="error" class="error">{{ error }}</p>
         </div> -->
 
-        <button type="submit">
+        <button type="submit" :disabled="!csrf">
           {{ loading ? 'Sending...' : 'Book Your First Session' }}
         </button>
 

@@ -46,6 +46,14 @@ export default defineNuxtConfig({
     },
   },
 
+  app: {
+    head: {
+      link: [
+        { rel: 'icon', type: 'image/x-icon', href: '/favicon.icon' }
+      ]
+    }
+  },
+
   modules: ['@pinia/nuxt', '@nuxtjs/i18n', '@nuxt/eslint'],
 
   i18n: {
