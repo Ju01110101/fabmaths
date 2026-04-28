@@ -7,14 +7,14 @@ session_start();
 
 // ─── Anti-bot: Referer check ────────────────────────────────────────────────
 // Only accept submissions that come from our own domain.
-$allowedHosts = ['fab-maths.com', 'www.fab-maths.com'];
-$referer      = $_SERVER['HTTP_REFERER'] ?? '';
-$refererHost  = parse_url($referer, PHP_URL_HOST);
+// $allowedHosts = ['fab-maths.com', 'www.fab-maths.com'];
+// $referer      = $_SERVER['HTTP_REFERER'] ?? '';
+// $refererHost  = parse_url($referer, PHP_URL_HOST);
 
-if (!in_array($refererHost, $allowedHosts, true)) {
-  http_response_code(403);
-  exit('Forbidden');
-}
+// if (!in_array($refererHost, $allowedHosts, true)) {
+//   http_response_code(403);
+//   exit('Forbidden');
+// }
 
 // ─── Anti-bot: Honeypot field (should always be empty) ──────────────────────
 $honeypot = $_POST['full_name_confirm'] ?? '';
