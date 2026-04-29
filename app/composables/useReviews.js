@@ -23,11 +23,11 @@ export default function useReviews() {
       (currentReviewIndex.value - 1 + localReviews.value.length) % localReviews.value.length
   }
 
-  const goToReview = (index: number) => {
+  const goToReview = (index) => {
     currentReviewIndex.value = index
   }
 
-  const getReviewAvatarUrl = (fileName: string) => {
+  const getReviewAvatarUrl = (fileName) => {
     if (!fileName) return ''
 
     const path = `/assets/img/reviewers/${fileName}`
@@ -35,11 +35,11 @@ export default function useReviews() {
     return reviewImages[path] || ''
   }
 
-  const startTouch = (e: TouchEvent) => {
+  const startTouch = (e) => {
     eventProps.startX = e.touches[0]?.clientX ?? 0
     eventProps.diff = 0
   }
-  const moveTouch = (e: TouchEvent) => {
+  const moveTouch = (e) => {
     eventProps.diff = eventProps.startX - (e.touches[0]?.clientX ?? 0)
   }
   const endTouch = () => {
@@ -48,12 +48,12 @@ export default function useReviews() {
     }
   }
 
-  const startMouse = (e: MouseEvent) => {
+  const startMouse = (e) => {
     eventProps.startX = e.clientX
     eventProps.isDragging = true
     eventProps.diff = 0
   }
-  const moveMouse = (e: MouseEvent) => {
+  const moveMouse = (e) => {
     if (!eventProps.isDragging) return
     eventProps.diff = eventProps.startX - e.clientX
   }

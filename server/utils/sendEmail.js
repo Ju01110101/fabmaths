@@ -1,15 +1,7 @@
 // utils/sendEmail.ts
 import nodemailer from 'nodemailer'
 
-interface EmailPayload {
-  to: string
-  subject: string
-  text: string
-  html: string
-  replyTo?: string // Optional, useful if you want to reply directly to the parent
-}
-
-export async function sendEmail(payload: EmailPayload) {
+export async function sendEmail(payload) {
   const transporter = nodemailer.createTransport({
     host: process.env.SMTP_HOST,
     port: Number(process.env.SMTP_PORT),

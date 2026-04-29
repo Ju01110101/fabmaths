@@ -1,6 +1,6 @@
-<script setup lang="ts">
+<script setup>
 const { faqItems, activeIndex, toggle } = useFaq()
-const getWrapperStyle = (index: number) => {
+const getWrapperStyle = (index) => {
   return {
     gridTemplateRows: activeIndex.value === index ? '1fr' : '0fr',
     opacity: activeIndex.value === index ? '1' : '0',

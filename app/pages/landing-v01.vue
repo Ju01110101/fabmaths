@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script setup>
 const route = useRoute()
 
 definePageMeta({
@@ -8,7 +8,7 @@ definePageMeta({
 
 const loading = ref(false)
 
-const formRef = ref<HTMLFormElement | null>(null)
+const formRef = ref(null)
 const form = ref({
   // role: queryToString(route.query, 'role'),
   name: queryToString(route.query, 'name'),
@@ -33,8 +33,8 @@ const updateFormAndError = () => {
   }
 }
 
-const csrf = ref<string | null>(null)
-const error = ref<string | null>('')
+const csrf = ref(null)
+const error = ref('')
 
 const validate = () => {
   // if (!form.role ||!form.value.name || !form.value.email || !form.value.contact) {

@@ -30,9 +30,9 @@ export default function useFaq() {
         'I am currently prioritising Year 10 & 11 students for the upcoming exam season. However, please message me and I can let you know if a spot opens up.',
     },
   ])
-  const activeIndex = ref<number | null>(null)
+  const activeIndex = ref(null)
 
-  const toggle = (index: number) => {
+  const toggle = (index) => {
     activeIndex.value = activeIndex.value === index ? null : index
   }
 

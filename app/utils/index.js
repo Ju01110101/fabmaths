@@ -78,10 +78,7 @@ export const reviews = [
   },
 ]
 
-export function formatRelativeDate(
-  input: number | string,
-  locale: string = 'en'
-): string {
+export function formatRelativeDate(input, locale = 'en') {
   const str = String(input)
 
   const year = Number(str.slice(0, 4))
@@ -108,7 +105,7 @@ export function formatRelativeDate(
   return rtf.format(diffWeeks, 'week')
 }
 
-export function scrollTo(elId: string) {
+export function scrollTo(elId) {
   const element = document.getElementById(elId)
   if (element) {
     element.style.scrollMarginTop = '20px'
@@ -130,10 +127,7 @@ export function openWhatsAppOrCall() {
   }, 1000)
 }
 
-export function queryToString(
-  query: Record<string, unknown>,
-  key: string
-): string {
+export function queryToString(query, key) {
   const value = query[key]
 
   if (typeof value === 'string') return value
@@ -141,13 +135,13 @@ export function queryToString(
   return ''
 }
 
-export function validateEmail(email: string): boolean {
+export function validateEmail(email) {
   if (!email) return true
   const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
   return re.test(email)
 }
 
-export function validatePhone(phone: string): boolean {
+export function validatePhone(phone) {
   if (!phone) return true
   const re = /^\+?\d{7,15}$/
   return re.test(phone)

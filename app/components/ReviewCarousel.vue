@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script setup>
 const {
   reviews,
   currentReviewIndex,
@@ -9,15 +9,12 @@ const {
   handlers,
 } = useReviews()
 const isReady = ref(false)
-const cardRefs = ref<(HTMLElement | null)[]>([])
+const cardRefs = ref([])
 const viewportHeight = ref(0)
 const viewportStyle = computed(() => ({
   height: viewportHeight.value ? `${viewportHeight.value}px` : 'auto',
 }))
-function setCardRef(
-  el: Element | ComponentPublicInstance | null,
-  index: number
-) {
+function setCardRef(el, index) {
   if (el && el instanceof HTMLElement) {
     cardRefs.value[index] = el
   }
